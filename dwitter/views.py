@@ -5,7 +5,7 @@ from .models import Dweet, Profile
 
 def dashboard(request):
     if not request.user.is_authenticated:
-        return redirect("dwitter:login")
+        return redirect('dwitter:login')
     form = DweetForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
@@ -26,11 +26,15 @@ def dashboard(request):
 
 
 def profile_list(request):
+    if not request.user.is_authenticated:
+        return redirect('dwitter:login')
     profiles = Profile.objects.exclude(user=request.user)
     return render(request, "dwitter/profile_list.html", {"profiles": profiles})
 
 
 def profile(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('dwitter:login')
     profile = Profile.objects.get(pk=pk)
     if request.method == "POST":
         current_user_profile = request.user.profile
